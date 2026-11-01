@@ -1292,7 +1292,7 @@ async function loadPOIs(selectedSystem,objects,radius,id) {
 
     if (!pois[selectedSystem]) {
         try {
-            const response = await fetch(`/static/POI/${systemName}.json`);
+            const response = await fetch(`/static/poi/${systemName}.json`);
             if (!response.ok) throw new Error(`Failed to fetch ${systemName}.json`);
             const data = await response.json();
 
