@@ -1,0 +1,23 @@
+[
+  {
+    "id": "Pyro2",
+    "name": "monox",
+    "type": "planet",
+    "parent": "pyro",
+    "X": 6057267168.13394,
+    "Y": -8724931116.523365,
+    "Z": 0.15582200000062585,
+    "distance": 10621436.274545502,
+    "inc": 0.0,
+    "asc": 0.0,
+    "angle3": 304.7702424766824,
+    "radius": 1.0,
+    "radius_km": 530.0,
+    "color": "#f77036",
+    "rotation_period": 11195.0,
+    "rotation_offset": 178.64341186,
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "locked": "false"
+  }
+]

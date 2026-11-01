@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+			<title>Manage Local Data</title>
+			<style>
+			  body {
+				font-family: sans-serif;
+				margin: 1rem;
+				background: #121212;   /* Dark background */
+				color: #e0e0e0;        /* Light text */
+			  }
+
+			  table {
+				width: 100%;
+				border-collapse: collapse;
+				table-layout: fixed;
+			  }
+
+			  th, td {
+				border: 1px solid #444;   /* Darker border */
+				padding: 0.5rem;
+				width: 150px;
+				max-width: 150px;
+				overflow: hidden;
+			  }
+
+			  th {
+				background: #1f1f1f;   /* Darker header */
+				color: #ffffff;        /* White text for headers */
+			  }
+
+			  td {
+				background: #181818;   /* Subtle dark cell background */
+			  }
+
+			  input, select, textarea {
+				width: 100%;
+				box-sizing: border-box;
+				background: #2a2a2a;  /* Dark input background */
+				color: #f0f0f0;       /* Light text */
+				border: 1px solid #555;
+			  }
+
+			  textarea {
+				height: 5rem;
+			  }
+
+			  input:focus, select:focus, textarea:focus {
+				outline: none;
+				border-color: #888;   /* Highlight focus */
+				background: #333;
+			  }
+
+			  .controls {
+				margin: 1rem 0;
+			  }
+			</style>
+		</head>
+		<body>
+			<h1>Manage Local Data</h1>
+			<button id="flushlocalStorage" style="background:#333;color:#ddd;border:none;padding:4px 8px;margin-bottom:8px;cursor:pointer;">Flush localStorage(sys data)</button>
+			<div class="controls">
+				<label>
+					<input id="key" value="system_stanton/crusader"/>
+					<button onclick="loadData()">Load</button>
+					<button onclick="saveData()">Save</button>
+					<button onclick="exportData()">Export</button>
+				</div>
+				<div id="table-container"/>
+				<script>
+  
+	document.getElementById('flushlocalStorage').onclick = async () => {
+		localStorage.clear();
+	};
+  
+	function receiveData(data) {
+		const keyinput = document.getElementById("key");
+		
+		keyinput.value = data;
+		loadData()
+	}
+
+    const defaultFields = {
+      id: "id",
+      name: "name",
+      type: "moon",
+      parent: "star/planet",
+      X: 0.0,
+      Y: 0.0,
+      Z: 0.0,
+      distance: 0.0,
+      inc: 0.0,
+      asc: 0.0,
+      angle3: 0.0,
+      radius: 0.0,
+      radius_km: 0.0,
+      color: "#ffffff",
+      rotation_period: 5000,
+      rotation_offset: 0,
+      latitude: 0.0,
+      longitude: 0.0,
+      locked: "false"
+    };
+
+    function normalizeEntry(entry) {
+      return Object.fromEntries(
+        Object.entries(defaultFields).map(([key, def]) => [key, entry[key] ?? def])
+      );
+    }
+
+    let currentData = [];
+
+	function createTable() {
+	    const container = document.getElementById("table-container");
+	    container.innerHTML = "";
+
+	    const table = document.createElement("table");
+	    const thead = document.createElement("thead");
+	    const tbody = document.createElement("tbody");
+
+	    // Top header row: first cell empty, then one for each item
+	    const headerRow = document.createElement("tr");
+	    const emptyTh = document.createElement("th");
+	    emptyTh.textContent = "Field";
+	    headerRow.appendChild(emptyTh);
+	    currentData.forEach((_, colIdx) => {
+		  const th = document.createElement("th");
+		  th.textContent = `#${colIdx + 1}`;
+		  headerRow.appendChild(th);
+	    });
+	    thead.appendChild(headerRow);
+
+	  // Rows per field
+	    Object.keys(defaultFields).forEach(field => {
+			const tr = document.createElement("tr");
+
+			const th = document.createElement("th");
+			th.textContent = field;
+			tr.appendChild(th);
+
+			currentData.forEach((item, colIdx) => {
+			const td = document.createElement("td");
+			let input;
+			if (field === "type") {
+				input = document.createElement("select");
+				["star","planet","moon","spacestation","gateway","parent","belt","city"].forEach(opt => {
+				  const option = document.createElement("option");
+				  option.value = opt;
+				  option.text = opt;
+				  if (item[field] === opt) option.selected = true;
+				  input.appendChild(option);
+				});
+				} else if (field === "locked") {
+					input = document.createElement("select");
+					["true", "false"].forEach(opt => {
+					  const option = document.createElement("option");
+					  option.value = opt;
+					  option.text = opt;
+					  if (item[field] === opt) option.selected = true;
+					  input.appendChild(option);
+					});
+				} else if (field === "color") {
+					input = document.createElement("input");
+					input.type = "color";
+					input.value = item[field] || "#ffffff";
+				} else {
+					input = document.createElement("input");
+					input.value = item[field];
+				}
+				  input.onchange = () => {
+					currentData[colIdx][field] = input.value;
+				  };
+				  td.appendChild(input);
+				  tr.appendChild(td);
+			});
+
+			tbody.appendChild(tr);
+		});
+
+		table.appendChild(thead);
+		table.appendChild(tbody);
+		container.appendChild(table);
+	  
+	   // Create input field and button below the table
+		const inputContainer = document.createElement("div");
+		inputContainer.style.marginTop = "20px";
+
+		const sendButton = document.createElement("button");
+		sendButton.textContent = "Send firstBody to server";
+		sendButton.style.marginLeft = "2px";
+		inputContainer.appendChild(sendButton);
+
+		const inputArea = document.createElement("textarea");
+		inputArea.rows = 4;
+		inputArea.cols = 60;
+		inputArea.placeholder = "Paste two coordinate lines here...";
+		inputContainer.appendChild(inputArea);
+
+
+		container.appendChild(inputContainer);
+
+		sendButton.onclick = () => {
+		  const lines = inputArea.value.trim().split("\n");
+		  const key = document.getElementById("key")?.value;
+
+		  // Ask which object to send (simplest: first one)
+		  const base = structuredClone(currentData[0]); // or let user choose row later
+		  if (!base || !key) {
+			alert("No data or key available.");
+			return;
+		}
+
+	    // Optional: allow renaming
+		const name = prompt("Name for object to send?", base.name || "unnamed");
+		if (!name) return;
+
+		base.name = name;
+		base.id = name.toLowerCase().replace(/\s+/g, "_");
+
+		base.measured = 1;
+		base.source = "inputOM";
+
+		// If textarea has 2 lines with coords, recalculate center
+		if (lines.length >= 2) {
+			const extractCoords = line => {
+			  const match = line.match(/x:([-\d.e]+)\s*y:([-\d.e]+)\s*z:([-\d.e]+)/i);
+			  if (!match) return null;
+			  return {
+				x: parseFloat(match[1]),
+				y: parseFloat(match[2]),
+				z: parseFloat(match[3])
+			  };
+			};
+
+			const p1 = extractCoords(lines[0]);
+			const p2 = extractCoords(lines[1]);
+
+			if (p1 && p2) {
+			  base.x = (p1.x + p2.x) / 2;
+			  base.y = (p1.y + p2.y) / 2;
+			  base.z = (p1.z + p2.z) / 2;
+			} else {
+			  alert("Invalid coordinate format, using stored position.");
+			}
+		  }
+		  console.log("Sending center data:", { name, base, key });
+		  fetch("/inputOMData", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(base)
+		  })
+			.then(res => res.ok ? alert("✔ Sent!") : alert("⚠ Server error"))
+			.catch(err => alert("⚠ Error: " + err));
+		};
+
+  
+	}
+
+	function loadData(retries = 10, delay = 100) {
+	  const key = document.getElementById("key").value;
+	  const stored = localStorage.getItem(key);
+	  
+	  if (key ==="system_") return
+
+	  if (!stored) {
+		if (retries > 0) {
+		  setTimeout(() => loadData(retries - 1, delay), delay);
+		} else {
+		  alert("Data not found in localStorage after waiting.");
+		}
+		return;
+	  }
+
+	  try {
+		const json = JSON.parse(stored);
+		currentData = json.map(normalizeEntry);
+		createTable();
+		
+	  } catch (e) {
+		alert("Error loading JSON: " + e);
+	  }
+	}
+
+    function saveData() {
+      const key = document.getElementById("key").value;
+      localStorage.setItem(key, JSON.stringify(currentData, null, 2));
+      alert("Data saved to " + key);
+    }
+
+    function exportData() {
+      const dataStr = JSON.stringify(currentData, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "system.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+			</body>
+		</html>

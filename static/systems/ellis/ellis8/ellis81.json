@@ -1,0 +1,23 @@
+[
+  {
+    "id": "ellis81",
+    "name": "ellis81",
+    "type": "moon",
+    "parent": "ellis8",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "distance": 100000.0,
+    "inc": 0.0,
+    "asc": 0.0,
+    "angle3": 0.0,
+    "radius": 0.5,
+    "radius_km": 300.0,
+    "color": "#bbbbbb",
+    "rotation_period": 3492.0,
+    "rotation_offset": 0.0,
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "locked": "false"
+  }
+]

@@ -1,0 +1,379 @@
+[
+  {
+    "name": "stanton",
+    "pcount": 4
+  },
+  {
+    "name": "pyro",
+    "pcount": 5
+  },
+  {
+    "name": "ail'ka",
+    "pcount": 5
+  },
+  {
+    "name": "bachus",
+    "pcount": 3
+  },
+  {
+    "name": "baker",
+    "pcount": 4
+  },
+  {
+    "name": "banshee",
+    "pcount": 4
+  },
+  {
+    "name": "banu-x",
+    "pcount": 0
+  },
+  {
+    "name": "branaugh",
+    "pcount": 3
+  },
+  {
+    "name": "bremen",
+    "pcount": 4
+  },
+  {
+    "name": "bysium",
+    "pcount": 0
+  },
+  {
+    "name": "caliban",
+    "pcount": 5
+  },
+  {
+    "name": "cano",
+    "pcount": 4
+  },
+  {
+    "name": "castra",
+    "pcount": 2
+  },
+  {
+    "name": "cathcart",
+    "pcount": 0
+  },
+  {
+    "name": "centauri",
+    "pcount": 5
+  },
+  {
+    "name": "charon",
+    "pcount": 5
+  },
+  {
+    "name": "chronos",
+    "pcount": 3
+  },
+  {
+    "name": "corel",
+    "pcount": 6
+  },
+  {
+    "name": "croshaw",
+    "pcount": 4
+  },
+  {
+    "name": "davien",
+    "pcount": 4
+  },
+  {
+    "name": "dya",
+    "pcount": 0
+  },
+  {
+    "name": "eealus",
+    "pcount": 3
+  },
+  {
+    "name": "el'sin",
+    "pcount": 0
+  },
+  {
+    "name": "ellis",
+    "pcount": 12
+  },
+  {
+    "name": "elysium",
+    "pcount": 5
+  },
+  {
+    "name": "ferron",
+    "pcount": 4
+  },
+  {
+    "name": "fora",
+    "pcount": 5
+  },
+  {
+    "name": "garron",
+    "pcount": 4
+  },
+  {
+    "name": "geddon",
+    "pcount": 1
+  },
+  {
+    "name": "genesis",
+    "pcount": 3
+  },
+  {
+    "name": "gliese",
+    "pcount": 6
+  },
+  {
+    "name": "goss",
+    "pcount": 3
+  },
+  {
+    "name": "gurzil",
+    "pcount": 0
+  },
+  {
+    "name": "hades",
+    "pcount": 3
+  },
+  {
+    "name": "hadrian",
+    "pcount": 3
+  },
+  {
+    "name": "helios",
+    "pcount": 4
+  },
+  {
+    "name": "horus",
+    "pcount": 3
+  },
+  {
+    "name": "hyoton",
+    "pcount": 4
+  },
+  {
+    "name": "idris",
+    "pcount": 5
+  },
+  {
+    "name": "kabal",
+    "pcount": 3
+  },
+  {
+    "name": "kai'pua",
+    "pcount": 4
+  },
+  {
+    "name": "kallis",
+    "pcount": 9
+  },
+  {
+    "name": "kellog",
+    "pcount": 6
+  },
+  {
+    "name": "khabari",
+    "pcount": 0
+  },
+  {
+    "name": "kiel",
+    "pcount": 6
+  },
+  {
+    "name": "kilian",
+    "pcount": 14
+  },
+  {
+    "name": "kins",
+    "pcount": 5
+  },
+  {
+    "name": "krell",
+    "pcount": 9
+  },
+  {
+    "name": "kurasawa",
+    "pcount": 0
+  },
+  {
+    "name": "kyuk'ya",
+    "pcount": 2
+  },
+  {
+    "name": "la'uo",
+    "pcount": 4
+  },
+  {
+    "name": "leir",
+    "pcount": 3
+  },
+  {
+    "name": "magnus",
+    "pcount": 3
+  },
+  {
+    "name": "markahil",
+    "pcount": 0
+  },
+  {
+    "name": "min",
+    "pcount": 1
+  },
+  {
+    "name": "nemo",
+    "pcount": 3
+  },
+  {
+    "name": "nexus",
+    "pcount": 5
+  },
+  {
+    "name": "nottingham",
+    "pcount": 0
+  },
+  {
+    "name": "nul",
+    "pcount": 5
+  },
+  {
+    "name": "nyx",
+    "pcount": 3
+  },
+  {
+    "name": "oberon",
+    "pcount": 7
+  },
+  {
+    "name": "odin",
+    "pcount": 3
+  },
+  {
+    "name": "ophos",
+    "pcount": 0
+  },
+  {
+    "name": "oretani",
+    "pcount": 6
+  },
+  {
+    "name": "orion",
+    "pcount": 4
+  },
+  {
+    "name": "osiris",
+    "pcount": 2
+  },
+  {
+    "name": "oso",
+    "pcount": 6
+  },
+  {
+    "name": "oya",
+    "pcount": 4
+  },
+  {
+    "name": "pelles",
+    "pcount": 0
+  },
+  {
+    "name": "rhetor",
+    "pcount": 5
+  },
+  {
+    "name": "rihlah",
+    "pcount": 6
+  },
+  {
+    "name": "sol",
+    "pcount": 9
+  },
+  {
+    "name": "tal",
+    "pcount": 7
+  },
+  {
+    "name": "tamsa",
+    "pcount": 2
+  },
+  {
+    "name": "tanga",
+    "pcount": 2
+  },
+  {
+    "name": "taranis",
+    "pcount": 4
+  },
+  {
+    "name": "tayac",
+    "pcount": 3
+  },
+  {
+    "name": "terra",
+    "pcount": 4
+  },
+  {
+    "name": "tiber",
+    "pcount": 2
+  },
+
+  {
+    "name": "tohil",
+    "pcount": 4
+  },
+  {
+    "name": "trise",
+    "pcount": 1
+  },
+  {
+    "name": "tyrol",
+    "pcount": 7
+  },
+  {
+    "name": "vanguard",
+    "pcount": 0
+  },
+  {
+    "name": "vector",
+    "pcount": 0
+  },
+  {
+    "name": "vega",
+    "pcount": 0
+  },
+  {
+    "name": "vesper",
+    "pcount": 0
+  },
+  {
+    "name": "viking",
+    "pcount": 0
+  },
+  {
+    "name": "virgil",
+    "pcount": 3
+  },
+  {
+    "name": "virgo",
+    "pcount": 0
+  },
+  {
+    "name": "virtus",
+    "pcount": 0
+  },
+  {
+    "name": "volt",
+    "pcount": 0
+  },
+  {
+    "name": "voodoo",
+    "pcount": 0
+  },
+  {
+    "name": "vulture",
+    "pcount": 0
+  },
+  {
+    "name": "yulin",
+    "pcount": 6
+  }
+]

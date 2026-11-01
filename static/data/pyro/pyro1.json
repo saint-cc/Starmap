@@ -1,0 +1,23 @@
+[
+  {
+    "id": "Pyro1",
+    "name": "pyro1",
+    "type": "planet",
+    "parent": "pyro",
+    "X": -7920920853.0,
+    "Y": -2386976476.4,
+    "Z": 0.0,
+    "distance": 8272765.18815669,
+    "inc": 0.0,
+    "asc": 0.0,
+    "angle3": 196.7702267720954,
+    "radius": 1.0,
+    "radius_km": 411.7,
+    "color": "#47cbe6",
+    "rotation_period": 8712.0,
+    "rotation_offset": -16.0,
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "locked": "false"
+  }
+]

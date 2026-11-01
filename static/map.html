@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>StarMap3D</title>
+ 
+	<script src="https://unpkg.com/three@0.146.0/build/three.min.js"></script>
+	<script src="https://unpkg.com/three@0.146.0/examples/js/controls/OrbitControls.js"></script>
+	<script src="/static/js/crypto-js.min.js"></script>
+	
+	<script src="/static/js/map.js"></script>
+
+	<style>
+	body {
+		font-family: 'Courier New', sans-serif;
+		margin: 0;
+		padding: 0;
+		height: 100%;
+		overflow: hidden;
+		background-color: black;
+	}
+	canvas {
+		display: block;
+		width: 100vw;
+		height: 100vh;
+	}
+
+    #settingsContent, #groupContent {
+
+        top:  8px;
+        left: 100px;
+        display: flex;
+        gap: 10px;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 8px 12px;
+        border-radius: 6px;
+        z-index: 10;
+		color: #fff;
+    }
+
+    #groupContent select,
+    #groupContent button,
+    #settingsContent select,
+    #settingsContent button {
+        font-size: 14px;
+        padding: 4px 8px;
+        background: #222;
+        color: white;
+        border: 1px solid #444;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    #groupContent button:hover {
+        background: #333;
+    }
+    #groupContent a {
+        color: #ccc;
+    }
+    #groupContent a:hover {
+        color: #fff;
+    }
+    #settingsContent button:hover {
+        background: #333;
+    }
+	
+	#controlBar {
+		position: fixed;
+        top:  8px;
+        left: 100px;
+        display: flex;
+        gap: 10px;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 8px 12px;
+        border-radius: 6px;
+        z-index: 10;
+		color: #fff;
+    }
+
+    #controlBar select,
+    #controlBar button {
+        font-size: 14px;
+        padding: 4px 8px;
+        background: #222;
+        color: white;
+        border: 1px solid #444;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    #controlBar button:hover {
+        background: #333;
+    }
+	
+	#goBCK {
+		position: fixed;
+		top: 1rem;
+		left: 2rem;
+		display: flex;
+		z-index: 1000;
+		background: rgba(0, 0, 0, 0.7);
+		color: white;
+		border: none;
+		padding: 0.5rem 1rem;
+		border-radius: 0.5rem;
+		cursor: pointer;
+	}
+
+	#goFS {
+		position: fixed;
+		top: 1rem;
+		right: 1rem;
+		z-index: 1000;
+		background: rgba(0, 0, 0, 0.7);
+		color: white;
+		border: none;
+		padding: 0.5rem 1rem;
+		border-radius: 0.5rem;
+		cursor: pointer;
+	}
+	#overlayDisplay {
+		position: absolute;
+		top: 10px; /* Just under fullscreen button */
+		left: 4px;
+		z-index: 999;
+		background: rgba(0, 0, 0, 0.6);
+		color: #fff;
+		font-size: 0.75rem;
+		padding: 0.5rem;
+		border-radius: 0.5rem;
+		line-height: 1.2;
+		font-family: monospace;
+	}
+	
+	/* Panel divs */
+	
+	/* Shared toggle button style */
+	.panel-toggle {
+	  position: absolute;
+	  top: 120px;
+	  right: -44px; /* move outside the console to the right */
+	  background: #111;
+	  color: #fff; 
+	  border: 1px solid #333;
+	  font-family: monospace;
+	  font-size: 24px;
+	  padding: 3px 6px;
+	  cursor: pointer;
+	  transition: background 0.2s ease, color 0.2s ease;
+	}
+
+	.panel-toggle:hover {
+	  background: #0f0;
+	  color: #111;
+	}
+
+	/* Place each toggle relative to its console */
+	#groupPanel {
+	  position: fixed;
+	  top: 60px;
+	  left: 20px;
+	  width: 400px;
+	  height: 250px;
+	  background: black;
+	  color: #FFF;
+	  font-family: monospace;
+	  font-size: 12px;
+	  line-height: 0.9;
+	  padding: 5px;
+	  overflow-y: auto;
+	  scrollbar-width: none;
+	  border: 1px solid #333;
+	  z-index: 9999;
+
+	  /* Make children like the toggle position relative to this box */
+	  overflow: visible;
+	}
+
+	#settingsPanel {
+	  position: fixed;
+	  bottom: 50px;
+	  left: 20px;
+	  width: 400px;
+	  height: 250px;
+	  background: black;
+	  color: #FFF;
+	  font-family: monospace;
+	  font-size: 12px;
+	  line-height: 0.9;
+	  padding: 5px;
+	  overflow-y: auto;
+	  scrollbar-width: none;
+	  border: 1px solid #333;
+	  z-index: 9999;
+
+	  overflow: visible;
+	}
+	
+	#groupPanel,
+	  #settingsPanel {
+	  transition: transform 0.4s ease;
+	}
+
+	#groupPanel.hidden,
+	#settingsPanel.hidden {
+	  transform: translateX(-110%); /* slide out to right */
+	}
+
+	/* content divs */
+	/* Hide scrollbar (Webkit) */
+	#groupContent::-webkit-scrollbar,
+	#settingsContent::-webkit-scrollbar {
+		display: none; /* hide scrollbar in WebKit browsers */
+	}
+
+	#groupContent,
+	#settingsContent {
+		scrollbar-width: none; /* hide scrollbar in Firefox */
+	}
+
+	#groupContent,
+	#settingsContent {
+		width: 400px;      /* same as console */
+		height: 250px;     /* same as console */
+		overflow-y: auto;  /* allow scrolling inside */
+		overflow-x: hidden;/* hide horizontal overflow */
+		padding: 5px;
+		box-sizing: border-box;
+	}
+
+	/* Console divs */
+	
+	/* Shared toggle button style */
+	.console-toggle {
+	  position: absolute;
+	  top: 120px;
+	  left: -44px; /* move outside the console to the right */
+	  background: #111;
+	  color: #fff; 
+	  border: 1px solid #333;
+	  font-family: monospace;
+	  font-size: 24px;
+	  padding: 3px 6px;
+	  cursor: pointer;
+	  transition: background 0.2s ease, color 0.2s ease;
+	}
+
+	.console-toggle:hover {
+	  background: #0f0;
+	  color: #111;
+	}
+
+	/* Place each toggle relative to its console */
+	#statusConsole {
+	  position: fixed;
+	  bottom: 50px;
+	  right: 20px;
+	  width: 400px;
+	  height: 250px;
+	  background: black;
+	  color: #FFF;
+	  font-family: monospace;
+	  font-size: 12px;
+	  line-height: 0.9;
+	  padding: 5px;
+	  overflow-y: auto;
+	  scrollbar-width: none;
+	  border: 1px solid #333;
+	  z-index: 9999;
+
+	  /* Make children like the toggle position relative to this box */
+	  overflow: visible;
+	}
+
+	#retroConsole {
+	  position: fixed;
+	  top: 60px;
+	  right: 20px;
+	  width: 400px;
+	  height: 250px;
+	  background: black;
+	  color: #FFF;
+	  font-family: monospace;
+	  font-size: 12px;
+	  line-height: 0.9;
+	  padding: 5px;
+	  overflow-y: auto;
+	  scrollbar-width: none;
+	  border: 1px solid #333;
+	  z-index: 9999;
+
+	  overflow: visible;
+	}
+
+  /* Hide scrollbar (Webkit) */
+  #retroConsole::-webkit-scrollbar {
+      display: none;
+  }
+  /* Blinking block cursor */
+  .cursor {
+      display: inline-block;
+      animation: blink 1s step-end infinite;
+  }
+  @keyframes blink {
+      50% { opacity: 0; }
+  }
+  
+  #retroConsole,
+  #statusConsole {
+  transition: transform 0.4s ease;
+}
+
+#retroConsole.hidden,
+#statusConsole.hidden {
+  transform: translateX(110%); /* slide out to right */
+}
+
+/* content divs */
+/* Hide scrollbar (Webkit) */
+#retroContent::-webkit-scrollbar,
+#statusContent::-webkit-scrollbar {
+    display: none; /* hide scrollbar in WebKit browsers */
+}
+
+#retroContent,
+#statusContent {
+    scrollbar-width: none; /* hide scrollbar in Firefox */
+}
+
+#retroContent,
+#statusContent {
+    width: 400px;      /* same as console */
+    height: 250px;     /* same as console */
+    overflow-y: auto;  /* allow scrolling inside */
+    overflow-x: hidden;/* hide horizontal overflow */
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+	
+</style>
+
+</head>
+<body>
+    
+	<div id="groupPanel">
+		<div id="groupContent">
+
+			<div id="overlayDisplay">
+				<span>Open <a href="#" onclick="openPoller(); return false;">Poller</a> for use with /showlocation comamnd.</span><br>
+				<br>
+				<label>Serv: <input id="signalserver" value="ws://172.16.3.35:8765"></label><br>
+				<label>Name: <input id="groupName" value="alpha"></label><br>
+				<label>Key : <input id="groupKey" type="password" placeholder="Enter key"></label><br><hr>
+				<button id="joinBtn">Join Group</button><br>
+				
+			</div>
+		</div>
+		<button id="togglePanel1" class="panel-toggle">&gt;</button>
+	</div>
+	<div id="settingsPanel">
+		<div id="settingsContent">
+			<select id="ThemeSelect">
+				<option Selected value="Default">Normal</option>
+				<option value="Amber">Amber</option>
+				<option value="Hot">Hot</option>
+				<option value="Cool">Cool</option>
+				<option value="Green">Retro</option>
+			</select>				
+		</div>
+		<button id="togglePanel2" class="panel-toggle">&gt;</button>
+	</div>
+
+	<div id="retroConsole">
+		<div id="retroContent"></div>
+		<button id="toggleLog1" class="console-toggle">&lt;</button>
+	</div>
+	
+	<div id="statusConsole">
+		<div id="statusContent"></div>
+		<button id="toggleLog2" class="console-toggle">&lt;</button>
+	</div>
+	<div id="topInfo">
+		<div id="controlBar">
+	
+			<button id="goBCK" onclick="goBack()">&larr; Back</button>
+			<button id="goFS" onclick="toggleFullscreen()">Fullscreen</button>
+			
+			<select id="systemSelect">
+				<option Selected value="">Galaxy</option>
+				<option value="stanton" selected>Stanton</option>
+				<option value="pyro">Pyro</option>
+				<option value="nyx">Nyx</option>
+			</select>	
+
+		</div>
+		
+    </div>
+</body>
+
+<script>
+function openPoller() {
+    const width = 260;
+    const height =210;
+    const left = (screen.width - width) / 2;
+    const top = (screen.height - height) / 2;
+
+    window.open(
+        '/static/poller.html', // URL of your poller
+        'StarCitizenPoller', // window name
+        `width=${width},height=${height},left=${left},top=${top},` +
+        `menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=no`
+    );
+}
+</script>
+
+<script>
+document.getElementById('togglePanel1').addEventListener('click', () => {
+  groupPanel.classList.toggle('hidden');
+  togglePanel1.innerHTML = groupPanel.classList.contains('hidden') ? '&gt;' : '&lt;';
+});
+document.getElementById('togglePanel2').addEventListener('click', () => {
+  settingsPanel.classList.toggle('hidden');
+  togglePanel2.innerHTML = settingsPanel.classList.contains('hidden') ? '&gt;' : '&lt;';
+});
+
+document.getElementById('toggleLog1').addEventListener('click', () => {
+  retroConsole.classList.toggle('hidden');
+  toggleLog1.innerHTML = retroConsole.classList.contains('hidden') ? '&lt;' : '&gt;';
+});
+document.getElementById('toggleLog2').addEventListener('click', () => {
+  statusConsole.classList.toggle('hidden');
+  toggleLog2.innerHTML = statusConsole.classList.contains('hidden') ? '&lt;' : '&gt;';
+});
+
+retroConsole.classList.toggle('hidden');
+statusConsole.classList.toggle('hidden');
+
+groupPanel.classList.toggle('hidden');
+settingsPanel.classList.toggle('hidden');
+
+
+function toggleFullscreen() {
+    const elem = document.documentElement; // or renderer.domElement
+
+    if (
+        document.fullscreenElement ||
+        document.webkitFullscreenElement || // Safari
+        document.msFullscreenElement // IE
+    ) {
+        // Exit fullscreen
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    } else {
+        // Enter fullscreen
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) { // Safari
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { // IE
+            elem.msRequestFullscreen();
+        }
+    }
+}
+
+// Hook console.log
+/*const oldLog = console.log;
+console.log = function (...args) {
+	oldLog.apply(console, args);
+	const safeArgs = args.map(arg => (typeof arg === "object" ? JSON.stringify(arg, null, 2) : String(arg)));
+	retroLog(safeArgs.join(" "), consoleEl);
+};*/
+
+const consoleEl = document.getElementById('retroContent');
+const consoleEl2 = document.getElementById('statusContent');
+
+retroLog("Waiting for status update...", consoleEl2);
+retroLog("", consoleEl2);
+
+retroLog("...", consoleEl);
+retroLog("BOOT SEQUENCE INITIATED...", consoleEl);
+retroLog("Loading core modules...", consoleEl);
+retroLog("Ready", consoleEl);
+retroLog("", consoleEl);
+
+</script>
+
+<script>
+// ######## GROUP CONNECT ########
+const ID = "browser" + Math.floor(Math.random()*10000);
+let GROUP_KEY;
+let GROUP;
+
+//const ws = new WebSocket("ws://172.16.3.35:8765");
+let serverUrl = document.getElementById("signalserver").value || "ws://172.16.3.35:8765";
+let ws = new WebSocket(serverUrl);
+
+// Map of tool IDs to their positions
+const overlay = document.getElementById("overlayDisplay");
+const positions = {}; // filled by WS messages
+
+function hashGroupName(name, key) {
+    // Combine group name + key into one string
+    const combined = name + key;
+
+    // Hash it with CryptoJS
+    return CryptoJS.SHA256(combined).toString();
+}
+
+document.getElementById("joinBtn").onclick = () => {
+	serverUrl = document.getElementById("signalserver").value || "ws://172.16.3.35:8765";
+	ws = new WebSocket(serverUrl);
+	
+    const keyInput = document.getElementById("groupKey").value;
+    GROUP_KEY = keyFromString(keyInput);
+    const plainGroup = document.getElementById("groupName").value;
+
+    // Hash group name + key using CryptoJS
+    GROUP = CryptoJS.SHA256(plainGroup + keyInput).toString();
+
+	ws.onopen = () => {
+		ws.send(JSON.stringify({type:"join_group", id:ID, group:GROUP}));
+		retroLog(`Joined group ${plainGroup} as ${ID}`, consoleEl2);
+	};
+	
+	    ws.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+
+        if (msg.type === "pos_update") {
+            if (!GROUP_KEY) return;
+
+            const pos = decryptAES(msg.data, GROUP_KEY);
+            if (pos) {
+                positions[msg.id] = pos;
+                renderUserList();
+            }
+        } else if (msg.type === "leave") {
+            delete positions[msg.id];
+            renderUserList();
+        }
+    };
+	
+    // UI still shows the plain group
+    overlay.innerHTML = `<strong>Group: ${plainGroup}</strong><br><div id="userList"></div>`;
+};
+
+	// Need to reattach a click function
+function attachJoinHandler() {
+    const joinBtn = document.getElementById("joinBtn");
+    if (!joinBtn) return;
+
+    joinBtn.onclick = () => {
+        const keyInput = document.getElementById("groupKey").value;
+        GROUP_KEY = keyFromString(keyInput);
+        const plainGroup = document.getElementById("groupName").value;
+
+        // Hash group name + key
+        GROUP = CryptoJS.SHA256(plainGroup + keyInput).toString();
+
+        ws.send(JSON.stringify({ type: "join_group", id: ID, group: GROUP }));
+        retroLog(`Joined group ${plainGroup} as ${ID}`, consoleEl2);
+
+        // Show the user list in overlay
+        const overlay = document.getElementById("overlayDisplay");
+        overlay.innerHTML = `<strong>Group: ${plainGroup}</strong><br><div id="userList"></div>`;
+        renderUserList(); // populate users
+    };
+}
+
+function renderUserList() {
+    const userListDiv = document.getElementById("userList");
+    if (!userListDiv) return;
+    userListDiv.innerHTML = ""; // clear previous
+
+    // Disconnect button at the top
+    const disconnectBtn = document.createElement("button");
+    disconnectBtn.textContent = "Disconnect";
+    disconnectBtn.onclick = () => {
+        const overlay = document.getElementById("overlayDisplay");
+        overlay.innerHTML = `
+			<span>Open <a href="#" onclick="openPoller(); return false;">Poller</a> for use with /showlocation comamnd.</span><br>
+            <br>
+			<label>Name: <input id="signalserver" value="ws://172.16.3.35:8765"></label><br>
+            <label>Name: <input id="groupName" value="alpha"></label><br>
+            <label>Key : <input id="groupKey" type="password" placeholder="Enter key"></label><br>
+			<button id="joinBtn">Join Group</button>
+        `;
+        attachJoinHandler(); // reattach join button handler
+    };
+    userListDiv.appendChild(disconnectBtn);
+
+    // List all users
+    for (const userId in positions) {
+        const userData = positions[userId];
+        const el = document.createElement("div");
+        el.textContent = `${userId} (${userData.system || "unknown system"})`;
+        userListDiv.appendChild(el);
+    }
+}
+
+ws.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+
+    if (msg.type === "pos_update") {
+        if (!GROUP_KEY) return;
+
+        const pos = decryptAES(msg.data, GROUP_KEY);
+        if (pos) {
+            positions[msg.id] = pos;
+            renderUserList();
+        }
+    }
+
+    else if (msg.type === "leave") {
+        // Remove player from positions
+        delete positions[msg.id];
+
+        // Update overlay/user list
+        renderUserList();
+    }
+};
+
+// Convert string key to WordArray (CryptoJS)
+function keyFromString(str){
+    return CryptoJS.enc.Utf8.parse(str.padEnd(32, '\0').slice(0,32));
+}
+
+// Decrypt AES-CBC
+function decryptAES(encryptedBase64, key){
+    try {
+        const encrypted = CryptoJS.enc.Base64.parse(encryptedBase64);
+        const iv = CryptoJS.lib.WordArray.create(encrypted.words.slice(0, 4)); // 16 bytes
+        const ciphertext = CryptoJS.lib.WordArray.create(encrypted.words.slice(4), encrypted.sigBytes - 16);
+        const decrypted = CryptoJS.AES.decrypt({ciphertext: ciphertext}, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7});
+        return JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+    } catch(e){
+        console.error("Decryption failed", e);
+        return null;
+    }
+}
+
+</script>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Starmap Treeview</title>
+<style>
+body {
+    background: #1e1e1e;
+    color: #ddd;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 0.9rem;
+    margin: 0;
+    padding: 0.5rem;
+    overflow-y: auto;
+}
+
+
+li {
+    cursor: pointer;
+    user-select: none;
+}
+li:hover {
+    color: #fff;
+}
+
+
+ul {
+    list-style: none;
+    padding-left: 1em; /* ensures indentation */
+    margin: 0;          /* remove extra spacing */
+}
+
+li > ul {
+    margin-left: 1em;   /* optional extra indentation for children */
+}
+</style>
+</head>
+<body>
+
+<button id="flushDB" style="
+    background:#333;color:#ddd;border:none;padding:4px 8px;margin-bottom:8px;
+    cursor:pointer;
+">Refresh</button>
+
+<script>
+
+// --- Setup IndexedDB ---
+function initDB() {
+	return new Promise((resolve, reject) => {
+		const request = indexedDB.open('TreeDB', 1);
+		request.onupgradeneeded = e => {
+			const db = e.target.result;
+			const store = db.createObjectStore('entities', { keyPath: 'id' });
+			store.createIndex('parent_id', 'parent_id', { unique: false });
+		};
+		request.onsuccess = e => resolve(e.target.result);
+		request.onerror = e => reject(e.target.error);
+	});
+}
+	
+(async () => {
+
+    // --- Read localStorage system_* keys ---
+	function getAllEntities() {
+		const entities = [];
+		for (let i = 0; i < localStorage.length; i++) {
+			const key = localStorage.key(i);
+			if (!key.startsWith('system_')) continue;
+
+			try {
+				const items = JSON.parse(localStorage.getItem(key));
+				items.forEach(item => {
+					const allowed = ['star', 'planet', 'moon', 'spacestation'];
+					if (!allowed.includes(item.type)) return;
+
+					// extract only last part of parent path
+					let parentName = null;
+					if (item.parent) {
+						const parts = item.parent.split('/');
+						parentName = parts[parts.length - 1]; // just the name
+					}
+					
+					entities.push({
+						id: item.name,
+						parent_id: parentName || null,  // <-- changed from parent_id
+						name: item.name,
+						type: item.type,
+						data: item.parent
+					});
+				});
+			} catch(e) {
+				console.warn('Invalid JSON in', key);
+			}
+		}
+		return entities;
+	}
+
+    async function saveEntitiesToDB(entities) {
+        const db = await initDB();
+        return new Promise(resolve => {
+            const tx = db.transaction('entities', 'readwrite');
+            const store = tx.objectStore('entities');
+            entities.forEach(e => store.put(e));
+            tx.oncomplete = () => resolve();
+        });
+    }
+
+    // --- Query children ---
+    async function getChildren(parentId) {
+        const db = await initDB();
+        return new Promise(resolve => {
+            const tx = db.transaction('entities', 'readonly');
+            const store = tx.objectStore('entities');
+            const index = store.index('parent_id');
+            const request = index.getAll(parentId);
+            request.onsuccess = () => resolve(request.result);
+        });
+    }
+
+    // --- Recursive render ---
+	async function renderTree(parentId, container) {
+		const children = await getChildren(parentId);
+		if (!children.length) return;
+
+		const ul = document.createElement('ul');
+
+		for (const child of children) {
+			const li = document.createElement('li');
+			
+			// Twisty icon
+			const twisty = document.createElement('span');
+			twisty.textContent = '+';
+			twisty.style.cursor = 'pointer';
+			twisty.style.display = 'inline-block';
+			twisty.style.width = '1em';
+			twisty.style.userSelect = 'none';
+			li.appendChild(twisty);
+
+			// Name link
+			const nameLink = document.createElement('span');
+			nameLink.textContent = child.name;
+			nameLink.style.cursor = 'pointer';
+			nameLink.style.marginLeft = '4px';
+			li.appendChild(nameLink);
+
+			// Twisty click: expand/collapse
+			twisty.onclick = async e => {
+				e.stopPropagation();
+				const nested = li.querySelector('ul');
+				if (nested) {
+					nested.remove();
+					twisty.textContent = '+';
+				} else {
+					twisty.textContent = '-';
+					await renderTree(child.id, li);
+				}
+			};
+
+			// Name click: main action
+			nameLink.onclick = e => {
+				e.stopPropagation();
+
+				let path;
+				if (child.type === "planet" || child.type === "moon") {
+					path = `${child.data}/${child.name}/map`;
+				} else if (child.type === "spacestation") {
+					path = child.data;
+				} else {
+					path = `${child.data}/${child.name}`;
+				}
+
+				path = path.replace(/^\/+/, ''); // remove leading slashes
+
+				parent.otherIframeFunction("system_" + path);
+				parent.treeviewSelect(path);
+			};
+
+			ul.appendChild(li);
+		}
+
+		container.appendChild(ul);
+	}
+	
+    // --- 5. Initialize ---
+    const entities = getAllEntities();
+	// root
+	const root = { id: 'galaxy', parent_id: null, name: 'Galaxy', type: 'root', data: {} };
+	entities.push(root);
+
+	// Make top-level stars point to 'galaxy' if parent_id is null
+	entities.forEach(e => {
+		if (!e.parent_id && e.id !== 'galaxy') {
+			e.parent_id = 'Galaxy';
+		}
+	});
+	
+    await saveEntitiesToDB(entities);
+    await renderTree('Galaxy', document.body); // top-level parents have parent_id = null
+
+})();
+
+document.getElementById('flushDB').onclick = async () => {
+    const db = await initDB();
+    const tx = db.transaction('entities', 'readwrite');
+    tx.objectStore('entities').clear();
+    tx.oncomplete = async () => {
+        document.body.innerHTML = ''; 	// clear tree
+		
+		location.reload(); 				// full reload
+    };
+};
+
+
+</script>
+
+
+</body>
+</html>

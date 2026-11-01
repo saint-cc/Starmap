@@ -1,0 +1,23 @@
+[
+  {
+    "id": "pyro3",
+    "name": "bloom",
+    "type": "planet",
+    "parent": "pyro",
+    "X": -16103894580.152687,
+    "Y": 7587938798.815231,
+    "Z": 0.6977899999474175,
+    "distance": 17802028.981642418,
+    "inc": 0.0,
+    "asc": 0.0,
+    "angle3": 154.77081636645053,
+    "radius": 0.3,
+    "radius_km": 415.0,
+    "color": "#5599ff",
+    "rotation_period": 18108.0,
+    "rotation_offset": -84.0,
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "locked": "false"
+  }
+]

@@ -1,0 +1,145 @@
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.16.3.193:5000
+[33mPress CTRL+C to quit[0m
+Exception on / [GET]
+Traceback (most recent call last):
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\jbra\Documents\GitHub\starmap\mapp.py", line 51, in index
+    return render_template('index.html')
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\templating.py", line 150, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\templating.py", line 66, in get_source
+    return self._get_source_fast(environment, template)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\templating.py", line 100, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: index.html
+{"time": "2026-11-01T08:09:40.949671+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 500}
+127.0.0.1 - - [01/Nov/2026 09:09:40] "[35m[1mGET / HTTP/1.1[0m" 500 -
+{"time": "2026-11-01T08:09:40.988486+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/favicon.ico", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 404}
+127.0.0.1 - - [01/Nov/2026 09:09:40] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+Exception on / [GET]
+Traceback (most recent call last):
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\jbra\Documents\GitHub\starmap\mapp.py", line 51, in index
+    return render_template('index.html')
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\templating.py", line 150, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\templating.py", line 66, in get_source
+    return self._get_source_fast(environment, template)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\templating.py", line 100, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: index.html
+{"time": "2026-11-01T08:09:51.834381+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 500}
+127.0.0.1 - - [01/Nov/2026 09:09:51] "[35m[1mGET / HTTP/1.1[0m" 500 -
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.16.3.193:5000
+[33mPress CTRL+C to quit[0m
+Exception on / [GET]
+Traceback (most recent call last):
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\jbra\Documents\GitHub\starmap\mapp.py", line 51, in index
+    return render_template('index.html')
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\templating.py", line 150, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\templating.py", line 66, in get_source
+    return self._get_source_fast(environment, template)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jbra\AppData\Roaming\Python\Python314\site-packages\flask\templating.py", line 100, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: index.html
+{"time": "2026-11-01T08:10:05.254522+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 500}
+127.0.0.1 - - [01/Nov/2026 09:10:05] "[35m[1mGET / HTTP/1.1[0m" 500 -
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.16.3.193:5000
+[33mPress CTRL+C to quit[0m
+{"time": "2026-11-01T08:10:55.149675+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 200}
+127.0.0.1 - - [01/Nov/2026 09:10:55] "GET / HTTP/1.1" 200 -
+{"time": "2026-11-01T08:10:55.203690+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/treeview", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 200}
+127.0.0.1 - - [01/Nov/2026 09:10:55] "GET /treeview HTTP/1.1" 200 -
+{"time": "2026-11-01T08:10:55.213835+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/edit", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 200}
+127.0.0.1 - - [01/Nov/2026 09:10:55] "GET /edit HTTP/1.1" 200 -
+{"time": "2026-11-01T08:10:55.220071+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/map", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 200}
+127.0.0.1 - - [01/Nov/2026 09:10:55] "GET /map HTTP/1.1" 200 -
+{"time": "2026-11-01T08:10:55.240114+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/static/js/map.js", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 200}
+127.0.0.1 - - [01/Nov/2026 09:10:55] "GET /static/js/map.js HTTP/1.1" 200 -
+{"time": "2026-11-01T08:10:55.244473+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/static/js/crypto-js.min.js", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 200}
+127.0.0.1 - - [01/Nov/2026 09:10:55] "GET /static/js/crypto-js.min.js HTTP/1.1" 200 -
+{"time": "2026-11-01T08:10:55.302507+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/system", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 200}
+127.0.0.1 - - [01/Nov/2026 09:10:55] "GET /system HTTP/1.1" 200 -
+{"time": "2026-11-01T08:10:55.331681+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/static/nebulae.png", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 200}
+{"time": "2026-11-01T08:10:55.331924+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/static/textures/hurston.png", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 200}
+127.0.0.1 - - [01/Nov/2026 09:10:55] "GET /static/nebulae.png HTTP/1.1" 200 -
+127.0.0.1 - - [01/Nov/2026 09:10:55] "GET /static/textures/hurston.png HTTP/1.1" 200 -
+{"time": "2026-11-01T08:10:55.332749+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/static/textures/microtech.png", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 200}
+{"time": "2026-11-01T08:10:55.332930+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/static/textures/arccorp.png", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 200}
+127.0.0.1 - - [01/Nov/2026 09:10:55] "GET /static/textures/microtech.png HTTP/1.1" 200 -
+127.0.0.1 - - [01/Nov/2026 09:10:55] "GET /static/textures/arccorp.png HTTP/1.1" 200 -
+{"time": "2026-11-01T08:10:55.333760+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/static/textures/crusader.png", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 200}
+127.0.0.1 - - [01/Nov/2026 09:10:55] "GET /static/textures/crusader.png HTTP/1.1" 200 -
+{"time": "2026-11-01T08:10:55.340608+00:00", "ip": "127.0.0.1", "host": "127.0.0.1:5000", "port": 80, "method": "GET", "path": "/static/glow.png", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36", "code": 200}
+127.0.0.1 - - [01/Nov/2026 09:10:55] "GET /static/glow.png HTTP/1.1" 200 -

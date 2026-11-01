@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>3D Math Tools</title>
+<style>
+  body {
+    font-family: "Segoe UI", sans-serif;
+    font-size: 0.8rem;          /* ~10% smaller */
+    padding: 0.4rem;
+    margin: 0;
+    background: #121212;        /* dark background */
+    color: #e0e0e0;             /* light text */
+  }
+
+  .toolbox {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;                /* smaller spacing */
+    max-width: 288px;           /* ~10% smaller */
+  }
+
+  .tool {
+    border: 1px solid #444;
+    padding: 0.5rem;
+    border-radius: 0.35rem;
+    background: #1c1c1c;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+
+  .tool h2 {
+    margin: 0 0 0.3rem 0;
+    font-size: 0.85rem;         /* smaller header */
+    color: #fff;
+  }
+
+  input, button {
+    margin: 0.12rem 0;
+    padding: 0.2rem 0.25rem;
+    font-size: 0.75rem;         /* ~10% smaller */
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #555;
+    border-radius: 0.25rem;
+    background: #2a2a2a;
+    color: #f0f0f0;
+  }
+
+  button {
+    background: #333;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover {
+    background: #444;
+  }
+
+  .result {
+    margin-top: 0.25rem;
+    font-family: monospace;
+    font-size: 0.75rem;
+    background: #181818;
+    padding: 0.35rem;
+    border: 1px dashed #555;
+    border-radius: 0.25rem;
+    color: #ddd;
+  }
+
+  #points_input {
+    width: 100%;
+    min-height: 135px;          /* ~10% smaller */
+    max-height: 360px;          /* scaled down */
+    padding: 0.45rem;
+    font-family: monospace;
+    font-size: 0.8rem;
+    border: 1px solid #555;
+    border-radius: 0.25rem;
+    resize: vertical;
+    box-sizing: border-box;
+    background: #222;
+    color: #f0f0f0;
+  }
+
+  #points_input:focus, input:focus, button:focus {
+    outline: none;
+    border-color: #888;         /* subtle highlight */
+    background: #2e2e2e;
+  }
+</style>
+
+</head>
+<body>
+	<h1>3D Math Tool Collection</h1>
+	<div class="toolbox">
+
+		<div class="tool">
+		  <h2>Convert XYz to Polar (2D)</h2>
+		  <input id="xyz_x" placeholder="X" type="number" step="any" />
+		  <input id="xyz_y" placeholder="Y" type="number" step="any" />
+		  <input id="xyz_z" placeholder="0" type="number" step="any" />
+		  <button onclick="convertToPolar()">Convert</button>
+		  <div class="result" id="polar_result"></div>
+		</div>
+
+		<div class="tool">
+		  <h2>Convert Spherical to XYZ (3D)</h2>
+		  <input id="sph_radius" placeholder="Radius (r)" type="number" step="any" />
+		  <input id="sph_azimuth" placeholder="Azimuth θ (degrees)" type="number" step="any" />
+		  <input id="sph_elevation" placeholder="Elevation φ (degrees)" type="number" step="any" />
+		  <button onclick="convertSphericalToXYZ()">Convert</button>
+		  <div class="result" id="xyz_result"></div>
+		</div>
+
+		<div class="tool">
+		  <h2>Find Center of Points (3D)</h2>
+		  <textarea id="points_input" placeholder="Enter one x,y,z per line, e.g. 1,2,3"></textarea>
+		  <button onclick="findCenter()">Compute Center</button>
+		  <div class="result" id="center_result"></div>
+		</div>
+
+		<div class="tool">
+		  <h2>Distance Between Two 3D Points</h2>
+		  <input id="a_xyz" placeholder="Point A (x,y,z)" />
+		  <input id="b_xyz" placeholder="Point B (x,y,z)" />
+		  <button onclick="computeDistance()">Compute</button>
+		  <div class="result" id="distance_result"></div>
+		</div>
+		<hr>
+
+		<div class="tool">
+			<h3>XYZ ⇄ Polar (3D)</h3>
+			<label>Input XYZ: <input id="xyz_input" placeholder="e.g. 100, 200, 300"></label>
+			<button onclick="xyzToPolar()">→ Polar</button>
+			<div>Polar Output: <span id="polar_output"></span></div>
+			<br>
+			<label>Input Polar (distance, azimuth°, elevation°): <input id="polar_input" placeholder="374.2, 63.4, 45.0"></label>
+			<button onclick="polarToXyz()">→ XYZ</button>
+			<div>XYZ Output: <span id="xyz_output"></span></div>
+		</div>
+
+		<div class="tool">
+			<h3>Stacked Polar → XYZ</h3>
+			<label>Base Polar (distance, azimuth°, elevation°): <input id="base_polar" placeholder="e.g. 100, 45, 0"></label>
+			<label>Offset Polar (distance, azimuth°, elevation°): <input id="offset_polar" placeholder="e.g. 50, 90, 0"></label>
+			<button onclick="stackedPolar()">→ Stacked XYZ</button>
+			<div>Stacked XYZ Output: <span id="stacked_output"></span></div>
+		</div>
+	</div>
+
+  <script>
+	function convertToSpherical() {
+		const x = parseFloat(document.getElementById("xyz_x").value);
+		const y = parseFloat(document.getElementById("xyz_y").value);
+		const z = parseFloat(document.getElementById("xyz_z").value);
+
+		const r = Math.sqrt(x*x + y*y + z*z);
+		const theta = Math.atan2(y, x) * 180 / Math.PI;        // azimuth angle
+		const phi = Math.acos(z / r) * 180 / Math.PI;          // elevation angle
+
+		document.getElementById("polar_result").textContent =
+			`Distance: ${r.toFixed(9)}, Azimuth θ: ${theta.toFixed(9)}°, Elevation φ: ${phi.toFixed(9)}°`;
+	}
+
+	function convertSphericalToXYZ() {
+		const r = parseFloat(document.getElementById("sph_radius").value);
+		const thetaDeg = parseFloat(document.getElementById("sph_azimuth").value);
+		const phiDeg = parseFloat(document.getElementById("sph_elevation").value);
+
+		const thetaRad = thetaDeg * Math.PI / 180; // azimuth
+		const phiRad = phiDeg * Math.PI / 180;     // elevation
+
+		const x = r * Math.sin(phiRad) * Math.cos(thetaRad);
+		const y = r * Math.sin(phiRad) * Math.sin(thetaRad);
+		const z = r * Math.cos(phiRad);
+
+		document.getElementById("xyz_result").textContent =
+			`X: ${x.toFixed(9)}, Y: ${y.toFixed(9)}, Z: ${z.toFixed(9)}`;
+	}
+
+
+    function findCenter() {
+      const input = document.getElementById("points_input").value.trim();
+      const lines = input.split("\n").filter(Boolean);
+      let sum = [0, 0, 0];
+      lines.forEach(line => {
+        const [x, y, z] = line.split(",").map(Number);
+        sum[0] += x;
+        sum[1] += y;
+        sum[2] += z;
+      });
+      const count = lines.length;
+      const center = sum.map(v => v / count);
+      document.getElementById("center_result").textContent = 
+        `Center: (${center.map(v => v.toFixed(9).join(", "))})`;
+    }
+
+    function computeDistance() {
+      const a = document.getElementById("a_xyz").value.split(",").map(Number);
+      const b = document.getElementById("b_xyz").value.split(",").map(Number);
+      const dx = a[0] - b[0];
+      const dy = a[1] - b[1];
+      const dz = a[2] - b[2];
+      const d = Math.sqrt(dx*dx + dy*dy + dz*dz);
+      document.getElementById("distance_result").textContent = 
+        `Distance: ${d.toFixed(9)}`;
+    }
+	function degToRad(deg) {
+		return deg * Math.PI / 180;
+	}
+	function radToDeg(rad) {
+	  return rad * 180 / Math.PI;
+	}
+
+	// Convert XYZ to Polar
+	function xyzToPolar() {
+	  const [x, y, z] = document.getElementById("xyz_input").value.split(',').map(Number);
+	  const distance = Math.sqrt(x*x + y*y + z*z);
+	  const azimuth = radToDeg(Math.atan2(y, x));
+	  const elevation = radToDeg(Math.asin(z / distance));
+	  document.getElementById("polar_output").textContent = `${distance.toFixed(9)}, ${azimuth.toFixed(9)}°, ${elevation.toFixed(9)}°`;
+	}
+
+	// Convert Polar to XYZ
+	function polarToXyz() {
+	  const [dist, azimuthDeg, elevDeg] = document.getElementById("polar_input").value.split(',').map(Number);
+	  const az = degToRad(azimuthDeg);
+	  const el = degToRad(elevDeg);
+	  const x = dist * Math.cos(el) * Math.cos(az);
+	  const y = dist * Math.cos(el) * Math.sin(az);
+	  const z = dist * Math.sin(el);
+	  document.getElementById("xyz_output").textContent = `${x.toFixed(9)}, ${y.toFixed(9)}, ${z.toFixed(9)}`;
+	}
+
+	// Stack two polar vectors and add XYZ result
+	function stackedPolar() {
+	  const [d1, az1, el1] = document.getElementById("base_polar").value.split(',').map(Number);
+	  const [d2, az2, el2] = document.getElementById("offset_polar").value.split(',').map(Number);
+
+	  const x1 = d1 * Math.cos(degToRad(el1)) * Math.cos(degToRad(az1));
+	  const y1 = d1 * Math.cos(degToRad(el1)) * Math.sin(degToRad(az1));
+	  const z1 = d1 * Math.sin(degToRad(el1));
+
+	  const x2 = d2 * Math.cos(degToRad(el2)) * Math.cos(degToRad(az2));
+	  const y2 = d2 * Math.cos(degToRad(el2)) * Math.sin(degToRad(az2));
+	  const z2 = d2 * Math.sin(degToRad(el2));
+
+	  const x = x1 + x2;
+	  const y = y1 + y2;
+	  const z = z1 + z2;
+
+	  document.getElementById("stacked_output").textContent = `${x.toFixed(9)}, ${y.toFixed(9)}, ${z.toFixed(9)}`;
+	}
+
+  </script>
+</body>
+</html>
