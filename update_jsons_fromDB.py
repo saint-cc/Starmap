@@ -4,7 +4,7 @@ import sqlite3
 from collections import OrderedDict
 
 DB_PATH = 'star_map.db'
-DATA_DIR = 'static\data'
+DATA_DIR = os.path.join("static", "data")
 
 # Template in exact desired order and default values
 TEMPLATE = OrderedDict([
